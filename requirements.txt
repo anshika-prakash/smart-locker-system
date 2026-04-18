@@ -1,0 +1,7 @@
+Flask==3.0.0
+Flask-SQLAlchemy==3.1.1
+pyserial==3.5
+
+Flask: The web server engine.
+Flask-SQLAlchemy:Python to SQLite database adapter
+pyserial: Python code to the Arduino over the USB cable.
