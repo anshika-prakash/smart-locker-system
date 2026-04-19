@@ -1,31 +1,285 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
 <head>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <title>Upload Resources</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Upload Material – CampusShare</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
 </head>
 <body>
-    <div class="container" style="max-width: 600px;">
-        <div class="card">
-            <h2>Upload Digital Material</h2>
-            <p style="color: #aaa;">Share PYQs, Notes, or Project References.</p>
-            
-            <form>
-                <label>Resource Title</label>
-                <input type="text" placeholder="e.g. Microprocessors PYQ 2024">
-                
-                <label>Category Tags</label>
-                <input type="text" placeholder="e.g. #Electronics #Exam #Notes">
-                
-                <label>Select File</label>
-                <input type="file" style="border: none; padding: 10px 0;">
-                
-                <div style="margin-top: 20px; display: flex; gap: 10px;">
-                    <button type="submit" class="btn-secondary">Upload to Platform</button>
-                    <a href="/dashboard"><button type="button" style="background: transparent; color: white; border: 1px solid #444;">Cancel</button></a>
-                </div>
-            </form>
+
+  <!-- ── NAVBAR ────────────────────────────────────────────── -->
+  <nav class="navbar navbar-expand-lg bg-body-tertiary border-bottom border-secondary shadow-sm sticky-top">
+    <div class="container-fluid">
+      <a class="navbar-brand fw-bold text-primary fs-4" href="index.html">
+        <i class="bi bi-mortarboard-fill me-2"></i>CampusShare
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="mainNav">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 gap-1">
+          <li class="nav-item"><a class="nav-link" href="index.html"><i class="bi bi-house me-1"></i>Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="dashboard.html"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link" href="transactions.html"><i class="bi bi-arrow-left-right me-1"></i>Transactions</a></li>
+          <li class="nav-item"><a class="nav-link" href="materials.html"><i class="bi bi-journal-bookmark-fill me-1"></i>Materials</a></li>
+          <li class="nav-item"><a class="nav-link" href="upload.html"><i class="bi bi-cloud-upload me-1"></i>Upload</a></li>
+          <li class="nav-item"><a class="nav-link" href="history.html"><i class="bi bi-clock-history me-1"></i>History</a></li>
+        </ul>
+        <div class="ms-3">
+          <span class="badge bg-primary rounded-pill"><i class="bi bi-person-circle me-1"></i>Student</span>
         </div>
+      </div>
     </div>
+  </nav>
+
+  <div class="container py-5" style="max-width:760px">
+
+    <!-- Page Title -->
+    <div class="text-center mb-5">
+      <div class="rounded-circle bg-primary bg-opacity-25 d-inline-flex align-items-center justify-content-center mb-3"
+           style="width:72px;height:72px">
+        <i class="bi bi-cloud-arrow-up fs-1 text-primary"></i>
+      </div>
+      <h2 class="fw-bold">Upload Study Material</h2>
+      <p class="text-muted">Share your notes, PDFs, and resources with the entire campus community.</p>
+    </div>
+
+    <!-- ── UPLOAD FORM ────────────────────────────────────── -->
+    <div class="card border-secondary shadow">
+      <div class="card-header border-secondary">
+        <ul class="nav nav-tabs card-header-tabs" id="uploadTabs">
+          <li class="nav-item">
+            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-file">
+              <i class="bi bi-file-earmark-arrow-up me-1"></i>File Upload
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-link">
+              <i class="bi bi-link-45deg me-1"></i>Share a Link
+            </button>
+          </li>
+        </ul>
+      </div>
+
+      <div class="card-body p-4">
+        <div class="tab-content">
+
+          <!-- FILE UPLOAD TAB -->
+          <div class="tab-pane fade show active" id="tab-file">
+            <form id="upload-form" novalidate>
+
+              <!-- Title -->
+              <div class="mb-4">
+                <label class="form-label fw-semibold">
+                  Material Title <span class="text-danger">*</span>
+                </label>
+                <input type="text" id="upload-title" class="form-control bg-body-secondary border-secondary"
+                       placeholder="e.g. Data Structures Complete Notes – Unit 1 to 5"
+                       required minlength="5" />
+                <div class="form-text text-muted">Give a clear, descriptive title so others can find it easily.</div>
+              </div>
+
+              <!-- File Input -->
+              <div class="mb-4">
+                <label class="form-label fw-semibold">
+                  File <span class="text-danger">*</span>
+                </label>
+                <div class="border border-secondary border-dashed rounded p-4 text-center bg-body-secondary">
+                  <i class="bi bi-file-earmark-arrow-up display-4 text-muted mb-2 d-block"></i>
+                  <p class="text-muted mb-3 small">Drag & drop your file here, or click to browse</p>
+                  <input type="file" id="upload-file" class="form-control bg-body border-secondary"
+                         accept=".pdf,.docx,.pptx,.txt,.xlsx" required />
+                  <div class="form-text text-muted mt-2">Supported: PDF, DOCX, PPTX, TXT, XLSX · Max size: 25 MB</div>
+                </div>
+              </div>
+
+              <!-- Subject & Semester Row -->
+              <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">
+                    Subject / Branch <span class="text-danger">*</span>
+                  </label>
+                  <select id="upload-subject" class="form-select bg-body-secondary border-secondary" required>
+                    <option value="" disabled selected>Select subject...</option>
+                    <option value="CSE">CSE – Computer Science</option>
+                    <option value="ECE">ECE – Electronics & Comm.</option>
+                    <option value="MECH">MECH – Mechanical</option>
+                    <option value="CIVIL">CIVIL – Civil Engineering</option>
+                    <option value="MATH">MATH – Mathematics</option>
+                    <option value="PHY">PHY – Physics</option>
+                    <option value="CHEM">CHEM – Chemistry</option>
+                    <option value="OTHER">Other</option>
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">
+                    Semester <span class="text-danger">*</span>
+                  </label>
+                  <select id="upload-semester" class="form-select bg-body-secondary border-secondary" required>
+                    <option value="" disabled selected>Select semester...</option>
+                    <option>Semester 1</option>
+                    <option>Semester 2</option>
+                    <option>Semester 3</option>
+                    <option>Semester 4</option>
+                    <option>Semester 5</option>
+                    <option>Semester 6</option>
+                    <option>Semester 7</option>
+                    <option>Semester 8</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Uploader Name -->
+              <div class="mb-4">
+                <label class="form-label fw-semibold">Your Name (optional)</label>
+                <input type="text" id="upload-name" class="form-control bg-body-secondary border-secondary"
+                       placeholder="e.g. Priya Kulkarni" />
+                <div class="form-text text-muted">Leave blank to upload anonymously.</div>
+              </div>
+
+              <!-- Tags Input -->
+              <div class="mb-4">
+                <label class="form-label fw-semibold">Tags</label>
+                <div class="input-group">
+                  <input type="text" id="tag-input" class="form-control bg-body-secondary border-secondary"
+                         placeholder="Type a tag and press Enter or Add..." />
+                  <button type="button" class="btn btn-outline-secondary" onclick="addTag()">
+                    <i class="bi bi-plus-lg me-1"></i>Add
+                  </button>
+                </div>
+                <div class="form-text text-muted">Add up to 6 tags to help others discover this material.</div>
+                <div id="tag-preview" class="mt-2 d-flex flex-wrap gap-1"></div>
+              </div>
+
+              <!-- Description -->
+              <div class="mb-4">
+                <label class="form-label fw-semibold">Description (optional)</label>
+                <textarea class="form-control bg-body-secondary border-secondary" rows="3"
+                          placeholder="Brief description of what this material covers..."></textarea>
+              </div>
+
+              <!-- Terms checkbox -->
+              <div class="mb-4 form-check">
+                <input type="checkbox" class="form-check-input" id="upload-terms" required />
+                <label class="form-check-label text-muted small" for="upload-terms">
+                  I confirm this material is my own work or I have permission to share it. I agree not to upload 
+                  copyrighted content without rights.
+                </label>
+              </div>
+
+              <!-- Submit -->
+              <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary btn-lg shadow">
+                  <i class="bi bi-cloud-arrow-up me-2"></i>Upload Material
+                </button>
+                <a href="materials.html" class="btn btn-outline-secondary">
+                  <i class="bi bi-arrow-left me-1"></i>Back to Materials
+                </a>
+              </div>
+
+            </form>
+          </div>
+
+          <!-- SHARE A LINK TAB -->
+          <div class="tab-pane fade" id="tab-link">
+            <div class="mb-4">
+              <label class="form-label fw-semibold">Material Title <span class="text-danger">*</span></label>
+              <input type="text" class="form-control bg-body-secondary border-secondary"
+                     placeholder="e.g. NPTEL Lecture Notes – Algorithms" />
+            </div>
+            <div class="mb-4">
+              <label class="form-label fw-semibold">Resource URL <span class="text-danger">*</span></label>
+              <div class="input-group">
+                <span class="input-group-text bg-body-secondary border-secondary">
+                  <i class="bi bi-link-45deg"></i>
+                </span>
+                <input type="url" class="form-control bg-body-secondary border-secondary"
+                       placeholder="https://drive.google.com/..." />
+              </div>
+              <div class="form-text text-muted">Google Drive, OneDrive, NPTEL, or any public link.</div>
+            </div>
+            <div class="row g-3 mb-4">
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Subject</label>
+                <select class="form-select bg-body-secondary border-secondary">
+                  <option>CSE</option><option>ECE</option><option>MECH</option><option>MATH</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Semester</label>
+                <select class="form-select bg-body-secondary border-secondary">
+                  <option>Semester 1</option><option>Semester 2</option>
+                  <option>Semester 3</option><option>Semester 4</option>
+                </select>
+              </div>
+            </div>
+            <div class="d-grid">
+              <button class="btn btn-primary btn-lg"
+                      onclick="showSuccessToast('✅ Link submitted successfully!'); return false;">
+                <i class="bi bi-send me-1"></i>Submit Link
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Upload Tips Card -->
+    <div class="card border-info mt-4 shadow-sm">
+      <div class="card-body">
+        <h6 class="text-info fw-semibold mb-3"><i class="bi bi-lightbulb-fill me-2"></i>Upload Tips</h6>
+        <ul class="list-unstyled mb-0 small text-muted">
+          <li class="mb-1"><i class="bi bi-check-circle text-success me-2"></i>Use descriptive titles that mention the subject, unit, or topic.</li>
+          <li class="mb-1"><i class="bi bi-check-circle text-success me-2"></i>Add relevant tags so students can find your notes via search.</li>
+          <li class="mb-1"><i class="bi bi-check-circle text-success me-2"></i>PDF format is preferred for best compatibility across devices.</li>
+          <li class="mb-1"><i class="bi bi-check-circle text-success me-2"></i>Materials with more votes appear higher in search results.</li>
+          <li><i class="bi bi-check-circle text-success me-2"></i>Only upload materials you have the right to share.</li>
+        </ul>
+      </div>
+    </div>
+
+  </div><!-- /container -->
+
+  <!-- ── UPLOAD SUCCESS MODAL ───────────────────────────────── -->
+  <div class="modal fade" id="uploadSuccessModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-success">
+        <div class="modal-body text-center py-5 px-4">
+          <div class="rounded-circle bg-success bg-opacity-25 d-inline-flex align-items-center justify-content-center mb-4"
+               style="width:80px;height:80px">
+            <i class="bi bi-check-circle-fill display-4 text-success"></i>
+          </div>
+          <h4 class="fw-bold mb-2">Upload Successful!</h4>
+          <p class="text-muted mb-1">Your material has been submitted:</p>
+          <p class="fw-semibold text-body mb-4" id="uploaded-title">—</p>
+          <p class="text-muted small mb-4">It will be available to all students on the platform shortly. 
+          Thank you for contributing to the campus community!</p>
+          <div class="d-flex gap-3 justify-content-center">
+            <a href="materials.html" class="btn btn-success px-4">
+              <i class="bi bi-journal-bookmark-fill me-1"></i>Browse Materials
+            </a>
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+              Upload Another
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── FOOTER ────────────────────────────────────────────── -->
+  <footer class="border-top border-secondary py-3 mt-5 bg-body-tertiary">
+    <div class="container text-center">
+      <small class="text-muted">© 2025 CampusShare · Frontend Demo · Built with Bootstrap 5</small>
+    </div>
+  </footer>
+
+  <div id="toast-container" class="position-fixed bottom-0 end-0 p-3" style="z-index:1100"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
 </body>
 </html>

@@ -5,21 +5,28 @@ app = Flask(__name__,
             static_folder='../frontend/static')
 
 @app.route('/')
-def login():
+def index():
     return render_template('index.html')
 
 @app.route('/dashboard')
 def dashboard():
     return render_template('dashboard.html')
 
-@app.route('/my-items')
-def my_items():
-    return render_template('my_items.html')
+@app.route('/transactions')
+def transactions():
+    return render_template('transactions.html')
+
+@app.route('/materials')
+def materials():
+    return render_template('materials.html')
 
 @app.route('/upload')
 def upload():
     return render_template('upload.html')
 
-# Start the server
+@app.route('/history')
+def history():
+    return render_template('history.html')
+
 if __name__ == '__main__':
     app.run(debug=True)
