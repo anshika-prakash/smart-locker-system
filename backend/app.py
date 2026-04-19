@@ -6,6 +6,7 @@ app = Flask(__name__,
 
 @app.route('/')
 def index():
+    # This is your home/landing page
     return render_template('index.html')
 
 @app.route('/dashboard')

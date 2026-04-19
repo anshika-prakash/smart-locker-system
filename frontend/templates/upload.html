@@ -12,7 +12,7 @@
   <!-- ── NAVBAR ────────────────────────────────────────────── -->
   <nav class="navbar navbar-expand-lg bg-body-tertiary border-bottom border-secondary shadow-sm sticky-top">
     <div class="container-fluid">
-      <a class="navbar-brand fw-bold text-primary fs-4" href="index.html">
+      <a class="navbar-brand fw-bold text-primary fs-4" href="{{ url_for('index') }}">
         <i class="bi bi-mortarboard-fill me-2"></i>CampusShare
       </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
@@ -20,12 +20,12 @@
       </button>
       <div class="collapse navbar-collapse" id="mainNav">
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0 gap-1">
-          <li class="nav-item"><a class="nav-link" href="index.html"><i class="bi bi-house me-1"></i>Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="dashboard.html"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a></li>
-          <li class="nav-item"><a class="nav-link" href="transactions.html"><i class="bi bi-arrow-left-right me-1"></i>Transactions</a></li>
-          <li class="nav-item"><a class="nav-link" href="materials.html"><i class="bi bi-journal-bookmark-fill me-1"></i>Materials</a></li>
-          <li class="nav-item"><a class="nav-link" href="upload.html"><i class="bi bi-cloud-upload me-1"></i>Upload</a></li>
-          <li class="nav-item"><a class="nav-link" href="history.html"><i class="bi bi-clock-history me-1"></i>History</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}"><i class="bi bi-house me-1"></i>Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard') }}"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('transactions') }}"><i class="bi bi-arrow-left-right me-1"></i>Transactions</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('materials') }}"><i class="bi bi-journal-bookmark-fill me-1"></i>Materials</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('upload') }}"><i class="bi bi-cloud-upload me-1"></i>Upload</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('history') }}"><i class="bi bi-clock-history me-1"></i>History</a></li>
         </ul>
         <div class="ms-3">
           <span class="badge bg-primary rounded-pill"><i class="bi bi-person-circle me-1"></i>Student</span>
@@ -174,7 +174,7 @@
                 <button type="submit" class="btn btn-primary btn-lg shadow">
                   <i class="bi bi-cloud-arrow-up me-2"></i>Upload Material
                 </button>
-                <a href="materials.html" class="btn btn-outline-secondary">
+                <a href="{{ url_for('materials') }}" class="btn btn-outline-secondary">
                   <i class="bi bi-arrow-left me-1"></i>Back to Materials
                 </a>
               </div>
@@ -258,7 +258,7 @@
           <p class="text-muted small mb-4">It will be available to all students on the platform shortly. 
           Thank you for contributing to the campus community!</p>
           <div class="d-flex gap-3 justify-content-center">
-            <a href="materials.html" class="btn btn-success px-4">
+            <a href="{{ url_for('materials') }}" class="btn btn-success px-4">
               <i class="bi bi-journal-bookmark-fill me-1"></i>Browse Materials
             </a>
             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">

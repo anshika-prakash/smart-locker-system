@@ -12,7 +12,7 @@
   <!-- ── NAVBAR ────────────────────────────────────────────── -->
   <nav class="navbar navbar-expand-lg bg-body-tertiary border-bottom border-secondary shadow-sm sticky-top">
     <div class="container-fluid">
-      <a class="navbar-brand fw-bold text-primary fs-4" href="index.html">
+      <a class="navbar-brand fw-bold text-primary fs-4" href="{{ url_for('index') }}">
         <i class="bi bi-mortarboard-fill me-2"></i>CampusShare
       </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
@@ -20,12 +20,12 @@
       </button>
       <div class="collapse navbar-collapse" id="mainNav">
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0 gap-1">
-          <li class="nav-item"><a class="nav-link" href="index.html"><i class="bi bi-house me-1"></i>Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="dashboard.html"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a></li>
-          <li class="nav-item"><a class="nav-link" href="transactions.html"><i class="bi bi-arrow-left-right me-1"></i>Transactions</a></li>
-          <li class="nav-item"><a class="nav-link" href="materials.html"><i class="bi bi-journal-bookmark-fill me-1"></i>Materials</a></li>
-          <li class="nav-item"><a class="nav-link" href="upload.html"><i class="bi bi-cloud-upload me-1"></i>Upload</a></li>
-          <li class="nav-item"><a class="nav-link" href="history.html"><i class="bi bi-clock-history me-1"></i>History</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}"><i class="bi bi-house me-1"></i>Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard') }}"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('transactions') }}"><i class="bi bi-arrow-left-right me-1"></i>Transactions</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('materials') }}"><i class="bi bi-journal-bookmark-fill me-1"></i>Materials</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('upload') }}"><i class="bi bi-cloud-upload me-1"></i>Upload</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('history') }}"><i class="bi bi-clock-history me-1"></i>History</a></li>
         </ul>
         <div class="ms-3 d-flex align-items-center gap-2">
           <span class="badge bg-primary rounded-pill"><i class="bi bi-person-circle me-1"></i>Student</span>
@@ -51,10 +51,10 @@
             borrowing and access a crowd-sourced library of study materials, all in one place.
           </p>
           <div class="d-flex flex-wrap gap-3">
-            <a href="dashboard.html" class="btn btn-primary btn-lg px-4 shadow">
+            <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg px-4 shadow">
               <i class="bi bi-speedometer2 me-2"></i>Go to Dashboard
             </a>
-            <a href="materials.html" class="btn btn-outline-primary btn-lg px-4">
+            <a href="{{ url_for('materials') }}" class="btn btn-outline-primary btn-lg px-4">
               <i class="bi bi-journal-bookmark-fill me-2"></i>Browse Materials
             </a>
           </div>
@@ -103,7 +103,7 @@
       <div class="row g-4 justify-content-center">
 
         <div class="col-md-4">
-          <a href="dashboard.html" class="text-decoration-none">
+          <a href="{{ url_for('dashboard') }}" class="text-decoration-none">
             <div class="card border-secondary h-100 text-center p-4 shadow-sm hover-shadow">
               <i class="bi bi-speedometer2 display-3 text-primary mb-3"></i>
               <h5 class="fw-bold">Dashboard</h5>
@@ -114,7 +114,7 @@
         </div>
 
         <div class="col-md-4">
-          <a href="transactions.html" class="text-decoration-none">
+          <a href="{{ url_for('transactions') }}" class="text-decoration-none">
             <div class="card border-secondary h-100 text-center p-4 shadow-sm">
               <i class="bi bi-arrow-left-right display-3 text-warning mb-3"></i>
               <h5 class="fw-bold">Transactions</h5>
@@ -125,7 +125,7 @@
         </div>
 
         <div class="col-md-4">
-          <a href="materials.html" class="text-decoration-none">
+          <a href="{{ url_for('materials') }}" class="text-decoration-none">
             <div class="card border-secondary h-100 text-center p-4 shadow-sm">
               <i class="bi bi-journal-bookmark-fill display-3 text-success mb-3"></i>
               <h5 class="fw-bold">Study Materials</h5>
@@ -136,7 +136,7 @@
         </div>
 
         <div class="col-md-4">
-          <a href="upload.html" class="text-decoration-none">
+          <a href="{{ url_for('upload') }}" class="text-decoration-none">
             <div class="card border-secondary h-100 text-center p-4 shadow-sm">
               <i class="bi bi-cloud-arrow-up display-3 text-info mb-3"></i>
               <h5 class="fw-bold">Upload Material</h5>
@@ -147,7 +147,7 @@
         </div>
 
         <div class="col-md-4">
-          <a href="history.html" class="text-decoration-none">
+          <a href="{{ url_for('history') }}" class="text-decoration-none">
             <div class="card border-secondary h-100 text-center p-4 shadow-sm">
               <i class="bi bi-clock-history display-3 text-secondary mb-3"></i>
               <h5 class="fw-bold">My History</h5>
@@ -167,9 +167,9 @@
       <span class="fw-bold text-primary"><i class="bi bi-mortarboard-fill me-2"></i>CampusShare</span>
       <small class="text-secondary">© 2025 CampusShare · Frontend Demo · Built with Bootstrap 5</small>
       <div class="d-flex gap-3">
-        <a href="transactions.html" class="text-secondary text-decoration-none small">Transactions</a>
-        <a href="materials.html"    class="text-secondary text-decoration-none small">Materials</a>
-        <a href="upload.html"       class="text-secondary text-decoration-none small">Upload</a>
+        <a href="{{ url_for('transactions') }}" class="text-secondary text-decoration-none small">Transactions</a>
+        <a href="{{ url_for('materials') }}"    class="text-secondary text-decoration-none small">Materials</a>
+        <a href="{{ url_for('upload') }}"       class="text-secondary text-decoration-none small">Upload</a>
       </div>
     </div>
   </footer>
