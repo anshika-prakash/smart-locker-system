@@ -1,21 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <title>Locker System | Login</title>
+    <title>Login | Smart Locker</title>
 </head>
 <body>
-    <div class="container" style="max-width: 400px; text-align: center;">
-        <div class="card">
-            <h1 style="color: var(--primary);">VIT Resource Sharing Platform</h1>
-            <p> Enter credentials To Login</p>
-            <form action="/landing.html">
-                <input type="text" placeholder="Roll Number" required>
+    <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+        <div class="glass-card" style="width: 350px; text-align: center;">
+            <h1 style="background: linear-gradient(to right, #00f2fe, #7000ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Access Portal</h1>
+            <form action="/dashboard">
+                <input type="text" placeholder="Student ID" required>
                 <input type="password" placeholder="Password" required>
-                <button type="submit" class="btn-primary" style="width: 100%;">Login</button>
+                <button type="submit" style="width: 100%;">Initialize Session</button>
             </form>
-            <hr style="margin: 20px 0; border: 0.5px solid #333;">
-            <p style="font-size: 0.8rem; color: #888;">Hardware Status: <span style="color: var(--accent);">Waiting for RFID...</span></p>
         </div>
     </div>
 </body>

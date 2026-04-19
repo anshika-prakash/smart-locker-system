@@ -1,55 +1,100 @@
 :root {
-    --bg-color: #121212;
-    --card-bg: #1e1e1e;
-    --primary: #00897b; /* Forest Green from your diagram */
-    --secondary: #5e35b1; /* Admin Panel Purple */
-    --text: #ffffff;
-    --accent: #ffb300; /* Warning/Locker Gold */
+    --bg: #0f172a;
+    --glass: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --primary: #00f2fe; /* Electric Blue */
+    --secondary: #7000ff; /* Neon Purple */
+    --accent: #f59e0b; /* Amber Gold */
+    --text: #f8fafc;
 }
 
 body {
-    font-family: 'Segoe UI', sans-serif;
-    background-color: var(--bg-color);
+    background: radial-gradient(circle at top left, #1e293b, #0f172a);
     color: var(--text);
+    font-family: 'Inter', sans-serif;
     margin: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    min-height: 100vh;
+    overflow-x: hidden;
 }
 
-.container {
-    width: 90%;
-    max-width: 1000px;
-    margin-top: 50px;
-}
-
-.card {
-    background: var(--card-bg);
+/* Glass Card Effect */
+.glass-card {
+    background: var(--glass);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
     padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-    margin-bottom: 20px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    transition: transform 0.3s ease, border-color 0.3s ease;
 }
 
-button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
+.glass-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--primary);
+}
+
+/* Navbar with Blur */
+.navbar {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    padding: 20px;
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(10px);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.nav-link {
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 500;
+    letter-spacing: 1px;
+    position: relative;
     transition: 0.3s;
 }
 
-.btn-primary { background-color: var(--primary); color: white; }
-.btn-secondary { background-color: var(--secondary); color: white; }
-button:hover { opacity: 0.8; transform: translateY(-2px); }
+.nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -5px;
+    left: 0;
+    background: var(--primary);
+    transition: 0.3s;
+}
+
+.nav-link:hover::after { width: 100%; }
+
+/* Neon Buttons */
+button {
+    background: linear-gradient(45deg, var(--primary), var(--secondary));
+    border: none;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    text-transform: uppercase;
+    box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
+    transition: 0.3s;
+}
+
+button:hover {
+    box-shadow: 0 0 25px rgba(0, 242, 254, 0.6);
+    transform: scale(1.05);
+}
 
 input {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border-radius: 5px;
-    border: 1px solid #333;
-    background: #252525;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--glass-border);
     color: white;
+    padding: 12px;
+    border-radius: 8px;
+    width: 100%;
+    margin-bottom: 15px;
 }
