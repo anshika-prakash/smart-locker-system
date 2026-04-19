@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Upload Resources</title>
+</head>
+<body>
+    <div class="container" style="max-width: 600px;">
+        <div class="card">
+            <h2>Upload Digital Material</h2>
+            <p style="color: #aaa;">Share PYQs, Notes, or Project References.</p>
+            
+            <form>
+                <label>Resource Title</label>
+                <input type="text" placeholder="e.g. Microprocessors PYQ 2024">
+                
+                <label>Category Tags</label>
+                <input type="text" placeholder="e.g. #Electronics #Exam #Notes">
+                
+                <label>Select File</label>
+                <input type="file" style="border: none; padding: 10px 0;">
+                
+                <div style="margin-top: 20px; display: flex; gap: 10px;">
+                    <button type="submit" class="btn-secondary">Upload to Platform</button>
+                    <a href="/dashboard"><button type="button" style="background: transparent; color: white; border: 1px solid #444;">Cancel</button></a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
