@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ASEP resource lab — home</title>
+    <link rel="stylesheet" href="/static/shared/lab.css" />
+  </head>
+  <body>
+    <!-- Landing hub: links into role-specific portals under static/student and static/admin. -->
+    <main class="hub">
+      <header class="top" style="border: none; padding-left: 0; padding-right: 0">
+        <div>
+          <h1>ASEP resource transactions lab</h1>
+          <p class="sub">
+            Use this page to pick a portal. The <strong>student</strong> UI supports borrow/return
+            (buttons + drag-and-drop). The <strong>admin</strong> UI shows the full log and tools to
+            add test resources. The Flask API is shared by both.
+          </p>
+        </div>
+      </header>
+
+      <section class="panel" style="margin-left: 0; margin-right: 0">
+        <h2>Run the server</h2>
+        <p class="hint">
+          From the project folder: <code>python app.py</code> — then open the links below (not the HTML
+          files directly).
+        </p>
+      </section>
+
+      <div class="hub-grid">
+        <a class="hub-card" href="/student/">
+          <h2>Student portal</h2>
+          <p>Model logins DEMO-1001 / DEMO-1002, borrow &amp; return buttons, lanes, your transaction slice.</p>
+        </a>
+        <a class="hub-card" href="/admin/">
+          <h2>Admin portal</h2>
+          <p>Model login DEMO-9999, full <code>GET /transactions</code> table, add resources, read-only lanes.</p>
+        </a>
+      </div>
+    </main>
+  </body>
+</html>

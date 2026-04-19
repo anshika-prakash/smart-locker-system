@@ -1,0 +1,27 @@
+This is made for the resource API. This is the backend for the transactions side, there is an app.py file that connects the sql to flask, and a college.db file that contains all the database for the transactions.
+
+Also there is a static webpage included that will better help visualise the whole transactions system. Also the assets could be used in the frontend of the entire website.
+
+There are also comments in each file to better understand the code
+
+## Quick start
+
+1. Create a Python virtual environment (recommended), then install dependencies:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+2. Ensure your SQLite file `college.db` exists in this folder and contains the `users`, `resources`, and `transactions` tables your course schema expects.
+
+3. Run the app:
+
+   ```bash
+   python app.py
+   ```
+
+4. Open http://127.0.0.1:5000/ for the hub, then choose:
+   - http://127.0.0.1:5000/student/ — student model logins, borrow/return buttons and drag-and-drop
+   - http://127.0.0.1:5000/admin/ — admin model login, full transaction log, add test resources
+
+Click Seed demo data once on either portal if presets are disabled
