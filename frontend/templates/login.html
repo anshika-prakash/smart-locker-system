@@ -20,6 +20,7 @@
       cursor: pointer;
       border: 2px solid var(--bs-border-color);
       transition: border-color 0.2s, transform 0.15s, box-shadow 0.15s;
+      user-select: none;
     }
     .role-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.35); }
     .role-card.selected-student { border-color: #0d6efd !important; background: rgba(13,110,253,0.08); }
@@ -31,16 +32,16 @@
   <!-- NAVBAR -->
   <nav class="navbar bg-body-tertiary border-bottom border-secondary shadow-sm">
     <div class="container-fluid">
-      <a class="navbar-brand fw-bold text-primary fs-4" href="#">
+      <span class="navbar-brand fw-bold text-primary fs-4">
         <i class="bi bi-mortarboard-fill me-2"></i>CampusShare
-      </a>
+      </span>
     </div>
   </nav>
 
   <div class="login-bg">
     <div style="width:100%;max-width:480px" class="px-3 py-4">
 
-      <!-- Logo / heading -->
+      <!-- Heading -->
       <div class="text-center mb-4">
         <div class="rounded-circle bg-primary bg-opacity-25 d-inline-flex align-items-center justify-content-center mb-3"
              style="width:72px;height:72px">
@@ -50,15 +51,15 @@
         <p class="text-muted small">Sign in to access your campus resource platform.</p>
       </div>
 
-      <!-- Role selector -->
-      <p class="text-muted small text-center mb-3 fw-semibold text-uppercase letter-spacing">Select your role</p>
+      <!-- Role selector (visual only — updates hidden input + prefills form) -->
+      <p class="text-muted small text-center mb-3 fw-semibold text-uppercase">Select your role</p>
       <div class="row g-3 mb-4">
         <div class="col-6">
           <div class="role-card rounded-3 p-3 text-center selected-student" id="role-student"
                onclick="selectRole('student')">
             <i class="bi bi-person-fill fs-1 text-primary mb-2 d-block"></i>
             <div class="fw-semibold">Student</div>
-            <small class="text-muted">Browse & borrow resources</small>
+            <small class="text-muted">Browse &amp; borrow resources</small>
           </div>
         </div>
         <div class="col-6">
@@ -71,144 +72,120 @@
         </div>
       </div>
 
-      <!-- Login card -->
+      <!-- LOGIN FORM — POSTs to Flask /login -->
       <div class="card border-secondary shadow">
         <div class="card-body p-4">
-          <div id="role-indicator" class="d-flex align-items-center gap-2 mb-4 p-2 rounded-2 bg-primary bg-opacity-10 border border-primary">
+
+          <!-- Role indicator bar -->
+          <div id="role-indicator"
+               class="d-flex align-items-center gap-2 mb-4 p-2 rounded-2 bg-primary bg-opacity-10 border border-primary">
             <i class="bi bi-person-fill text-primary"></i>
             <span class="small fw-semibold text-primary">Signing in as Student</span>
           </div>
 
-          <!-- Student credentials hint -->
+          <!-- Credential hints -->
           <div id="student-hint" class="alert alert-primary py-2 small mb-3">
             <i class="bi bi-info-circle me-1"></i>
-            Demo credentials — Email: <strong>student@campus.edu</strong> · Password: <strong>student123</strong>
+            Demo — Email: <strong>student@campus.edu</strong> · Password: <strong>student123</strong>
           </div>
-          <!-- Admin credentials hint -->
           <div id="admin-hint" class="alert alert-warning py-2 small mb-3 d-none">
             <i class="bi bi-info-circle me-1"></i>
-            Demo credentials — Email: <strong>admin@campus.edu</strong> · Password: <strong>admin123</strong>
+            Demo — Email: <strong>admin@campus.edu</strong> · Password: <strong>admin123</strong>
           </div>
 
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Email Address</label>
-            <div class="input-group">
-              <span class="input-group-text bg-body-secondary border-secondary">
-                <i class="bi bi-envelope text-muted"></i>
-              </span>
-              <input type="email" id="login-email" class="form-control bg-body-secondary border-secondary"
-                     placeholder="you@campus.edu" value="student@campus.edu" />
+          {% if error %}
+          <div class="alert alert-danger py-2 small mb-3">
+            <i class="bi bi-x-circle me-1"></i>{{ error }}
+          </div>
+          {% endif %}
+
+          <!-- The actual form that POSTs to Flask -->
+          <form method="POST" action="/login" id="login-form">
+
+            <!-- Hidden role field updated by JS when user clicks a role card -->
+            <input type="hidden" name="role" id="role-input" value="student" />
+
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Email Address</label>
+              <div class="input-group">
+                <span class="input-group-text bg-body-secondary border-secondary">
+                  <i class="bi bi-envelope text-muted"></i>
+                </span>
+                <input type="email" name="email" id="login-email"
+                       class="form-control bg-body-secondary border-secondary"
+                       placeholder="you@campus.edu"
+                       value="student@campus.edu" required />
+              </div>
             </div>
-          </div>
 
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Password</label>
-            <div class="input-group">
-              <span class="input-group-text bg-body-secondary border-secondary">
-                <i class="bi bi-lock text-muted"></i>
-              </span>
-              <input type="password" id="login-password" class="form-control bg-body-secondary border-secondary"
-                     placeholder="••••••••" value="student123" />
-              <button class="btn btn-outline-secondary border-secondary" type="button"
-                      onclick="togglePwd()"><i class="bi bi-eye" id="eye-icon"></i></button>
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Password</label>
+              <div class="input-group">
+                <span class="input-group-text bg-body-secondary border-secondary">
+                  <i class="bi bi-lock text-muted"></i>
+                </span>
+                <input type="password" name="password" id="login-password"
+                       class="form-control bg-body-secondary border-secondary"
+                       placeholder="••••••••"
+                       value="student123" required />
+                <button class="btn btn-outline-secondary border-secondary" type="button"
+                        onclick="togglePwd()">
+                  <i class="bi bi-eye" id="eye-icon"></i>
+                </button>
+              </div>
             </div>
-          </div>
 
-          <div id="login-error" class="alert alert-danger py-2 small d-none">
-            <i class="bi bi-x-circle me-1"></i><span id="error-msg">Invalid credentials.</span>
-          </div>
+            <div class="d-grid mt-4">
+              <button type="submit" class="btn btn-primary btn-lg fw-semibold">
+                <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+              </button>
+            </div>
 
-          <div class="d-grid mt-4">
-            <button class="btn btn-primary btn-lg fw-semibold" onclick="handleLogin()" id="login-btn">
-              <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
-            </button>
-          </div>
+          </form>
         </div>
       </div>
 
-      <p class="text-center text-muted small mt-3">
-        © 2025 CampusShare · Frontend Demo
-      </p>
+      <p class="text-center text-muted small mt-3">© 2025 CampusShare · Frontend Demo</p>
     </div>
   </div>
 
-  <!-- Toast -->
-  <div id="toast-container" class="position-fixed bottom-0 end-0 p-3" style="z-index:1100"></div>
-
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // ── Demo credentials ──────────────────────────────────────
-    const CREDENTIALS = {
-      student: { email: "student@campus.edu", password: "student123", redirect: "/dashboard" },
-      admin:   { email: "admin@campus.edu",   password: "admin123",   redirect: "/admin"     },
+    const PREFILL = {
+      student: { email: 'student@campus.edu', password: 'student123' },
+      admin:   { email: 'admin@campus.edu',   password: 'admin123'   },
     };
 
-    let currentRole = "student";
-
     function selectRole(role) {
-      currentRole = role;
-      // Card styling
-      document.getElementById("role-student").className =
-        "role-card rounded-3 p-3 text-center" + (role === "student" ? " selected-student" : "");
-      document.getElementById("role-admin").className =
-        "role-card rounded-3 p-3 text-center" + (role === "admin" ? " selected-admin" : "");
+      document.getElementById('role-input').value = role;
 
-      // Indicator bar
-      const ind = document.getElementById("role-indicator");
-      if (role === "student") {
-        ind.className = "d-flex align-items-center gap-2 mb-4 p-2 rounded-2 bg-primary bg-opacity-10 border border-primary";
+      document.getElementById('role-student').className =
+        'role-card rounded-3 p-3 text-center' + (role === 'student' ? ' selected-student' : '');
+      document.getElementById('role-admin').className =
+        'role-card rounded-3 p-3 text-center' + (role === 'admin' ? ' selected-admin' : '');
+
+      const ind = document.getElementById('role-indicator');
+      if (role === 'student') {
+        ind.className = 'd-flex align-items-center gap-2 mb-4 p-2 rounded-2 bg-primary bg-opacity-10 border border-primary';
         ind.innerHTML = '<i class="bi bi-person-fill text-primary"></i><span class="small fw-semibold text-primary">Signing in as Student</span>';
       } else {
-        ind.className = "d-flex align-items-center gap-2 mb-4 p-2 rounded-2 bg-warning bg-opacity-10 border border-warning";
+        ind.className = 'd-flex align-items-center gap-2 mb-4 p-2 rounded-2 bg-warning bg-opacity-10 border border-warning';
         ind.innerHTML = '<i class="bi bi-shield-fill-check text-warning"></i><span class="small fw-semibold text-warning">Signing in as Admin</span>';
       }
 
-      // Hints & prefill
-      const creds = CREDENTIALS[role];
-      document.getElementById("student-hint").classList.toggle("d-none", role !== "student");
-      document.getElementById("admin-hint").classList.toggle("d-none",   role !== "admin");
-      document.getElementById("login-email").value    = creds.email;
-      document.getElementById("login-password").value = creds.password;
-      document.getElementById("login-error").classList.add("d-none");
+      document.getElementById('student-hint').classList.toggle('d-none', role !== 'student');
+      document.getElementById('admin-hint').classList.toggle('d-none',   role !== 'admin');
+
+      document.getElementById('login-email').value    = PREFILL[role].email;
+      document.getElementById('login-password').value = PREFILL[role].password;
     }
 
     function togglePwd() {
-      const inp = document.getElementById("login-password");
-      const ico = document.getElementById("eye-icon");
-      if (inp.type === "password") { inp.type = "text"; ico.className = "bi bi-eye-slash"; }
-      else                         { inp.type = "password"; ico.className = "bi bi-eye"; }
+      const inp = document.getElementById('login-password');
+      const ico = document.getElementById('eye-icon');
+      if (inp.type === 'password') { inp.type = 'text';     ico.className = 'bi bi-eye-slash'; }
+      else                         { inp.type = 'password'; ico.className = 'bi bi-eye'; }
     }
-
-    function handleLogin() {
-      const email = document.getElementById("login-email").value.trim();
-      const pwd   = document.getElementById("login-password").value;
-      const creds = CREDENTIALS[currentRole];
-      const errDiv = document.getElementById("login-error");
-      const errMsg = document.getElementById("error-msg");
-
-      if (!email || !pwd) {
-        errMsg.textContent = "Please enter your email and password.";
-        errDiv.classList.remove("d-none"); return;
-      }
-
-      if (email !== creds.email || pwd !== creds.password) {
-        errMsg.textContent = "Invalid credentials. Check the hint above.";
-        errDiv.classList.remove("d-none"); return;
-      }
-
-      errDiv.classList.add("d-none");
-
-      // Store session in sessionStorage
-      sessionStorage.setItem("cs_role",  currentRole);
-      sessionStorage.setItem("cs_email", email);
-      sessionStorage.setItem("cs_name",  currentRole === "admin" ? "Admin" : "Student");
-
-      // Redirect
-      window.location.href = creds.redirect;
-    }
-
-    // Allow Enter key
-    document.addEventListener("keydown", e => { if (e.key === "Enter") handleLogin(); });
   </script>
 </body>
 </html>
