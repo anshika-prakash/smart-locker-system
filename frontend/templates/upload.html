@@ -24,11 +24,21 @@
           <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard') }}"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a></li>
           <li class="nav-item"><a class="nav-link" href="{{ url_for('transactions') }}"><i class="bi bi-arrow-left-right me-1"></i>Transactions</a></li>
           <li class="nav-item"><a class="nav-link" href="{{ url_for('materials') }}"><i class="bi bi-journal-bookmark-fill me-1"></i>Materials</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{ url_for('upload') }}"><i class="bi bi-cloud-upload me-1"></i>Upload</a></li>
+          <li class="nav-item"><a class="nav-link active" href="{{ url_for('upload') }}"><i class="bi bi-cloud-upload me-1"></i>Upload</a></li>
           <li class="nav-item"><a class="nav-link" href="{{ url_for('history') }}"><i class="bi bi-clock-history me-1"></i>History</a></li>
+          {% if role == 'admin' %}
+          <li class="nav-item"><a class="nav-link text-warning fw-semibold" href="{{ url_for('admin') }}"><i class="bi bi-shield-fill-check me-1"></i>Admin</a></li>
+          {% endif %}
         </ul>
-        <div class="ms-3">
-          <span class="badge bg-primary rounded-pill"><i class="bi bi-person-circle me-1"></i>Student</span>
+        <div class="ms-3 d-flex align-items-center gap-2">
+          {% if role == 'admin' %}
+          <span class="badge bg-warning text-dark rounded-pill"><i class="bi bi-shield-fill-check me-1"></i>Admin</span>
+          {% else %}
+          <span class="badge bg-primary rounded-pill"><i class="bi bi-person-circle me-1"></i>{{ name }}</span>
+          {% endif %}
+          <a href="{{ url_for('logout') }}" class="btn btn-sm btn-outline-secondary">
+            <i class="bi bi-box-arrow-right me-1"></i>Logout
+          </a>
         </div>
       </div>
     </div>
@@ -70,7 +80,6 @@
           <div class="tab-pane fade show active" id="tab-file">
             <form id="upload-form" novalidate>
 
-              <!-- Title -->
               <div class="mb-4">
                 <label class="form-label fw-semibold">
                   Material Title <span class="text-danger">*</span>
@@ -81,7 +90,6 @@
                 <div class="form-text text-muted">Give a clear, descriptive title so others can find it easily.</div>
               </div>
 
-              <!-- File Input -->
               <div class="mb-4">
                 <label class="form-label fw-semibold">
                   File <span class="text-danger">*</span>
@@ -95,7 +103,6 @@
                 </div>
               </div>
 
-              <!-- Subject & Semester Row -->
               <div class="row g-3 mb-4">
                 <div class="col-md-6">
                   <label class="form-label fw-semibold">
@@ -131,7 +138,6 @@
                 </div>
               </div>
 
-              <!-- Uploader Name -->
               <div class="mb-4">
                 <label class="form-label fw-semibold">Your Name (optional)</label>
                 <input type="text" id="upload-name" class="form-control bg-body-secondary border-secondary"
@@ -139,7 +145,6 @@
                 <div class="form-text text-muted">Leave blank to upload anonymously.</div>
               </div>
 
-              <!-- Tags Input -->
               <div class="mb-4">
                 <label class="form-label fw-semibold">Tags</label>
                 <div class="input-group">
@@ -153,14 +158,12 @@
                 <div id="tag-preview" class="mt-2 d-flex flex-wrap gap-1"></div>
               </div>
 
-              <!-- Description -->
               <div class="mb-4">
                 <label class="form-label fw-semibold">Description (optional)</label>
                 <textarea class="form-control bg-body-secondary border-secondary" rows="3"
                           placeholder="Brief description of what this material covers..."></textarea>
               </div>
 
-              <!-- Terms checkbox -->
               <div class="mb-4 form-check">
                 <input type="checkbox" class="form-check-input" id="upload-terms" required />
                 <label class="form-check-label text-muted small" for="upload-terms">
@@ -169,7 +172,6 @@
                 </label>
               </div>
 
-              <!-- Submit -->
               <div class="d-grid gap-2">
                 <button type="submit" class="btn btn-primary btn-lg shadow">
                   <i class="bi bi-cloud-arrow-up me-2"></i>Upload Material

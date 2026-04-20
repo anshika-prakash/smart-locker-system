@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard – CampusShare</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <style>
+    .overdue-row { background: rgba(220,53,69,0.08) !important; }
+    .due-soon-row { background: rgba(255,193,7,0.07) !important; }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAVBAR ─────────────────────────────────────────────── -->
+  <nav class="navbar navbar-expand-lg bg-body-tertiary border-bottom border-secondary shadow-sm sticky-top">
+    <div class="container-fluid">
+      <a class="navbar-brand fw-bold text-primary fs-4" href="{{ url_for('index') }}">
+        <i class="bi bi-mortarboard-fill me-2"></i>CampusShare
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="mainNav">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 gap-1">
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}"><i class="bi bi-house me-1"></i>Home</a></li>
+          <li class="nav-item"><a class="nav-link active" href="{{ url_for('admin') }}"><i class="bi bi-shield-fill-check me-1"></i>Admin Panel</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('transactions') }}"><i class="bi bi-arrow-left-right me-1"></i>Transactions</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('materials') }}"><i class="bi bi-journal-bookmark-fill me-1"></i>Materials</a></li>
+        </ul>
+        <div class="ms-3 d-flex align-items-center gap-2">
+          <span class="badge bg-warning text-dark rounded-pill fs-6 px-3 py-2">
+            <i class="bi bi-shield-fill-check me-1"></i>Admin
+          </span>
+          <a href="{{ url_for('logout') }}" class="btn btn-sm btn-outline-secondary">
+            <i class="bi bi-box-arrow-right me-1"></i>Logout
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container-fluid py-4 px-4">
+
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+      <div>
+        <h3 class="fw-bold mb-0">
+          <i class="bi bi-shield-fill-check me-2 text-warning"></i>Admin Dashboard
+        </h3>
+        <small class="text-muted">Full overview of all borrowed resources, due dates, and alerts.</small>
+      </div>
+      <div class="d-flex gap-2">
+        <a href="{{ url_for('transactions') }}" class="btn btn-warning">
+          <i class="bi bi-arrow-left-right me-1"></i>Manage Transactions
+        </a>
+      </div>
+    </div>
+
+    <!-- ── STAT CARDS ──────────────────────────────────────── -->
+    <div class="row g-3 mb-4">
+      <div class="col-6 col-md-3">
+        <div class="card border-primary border-2 h-100 shadow-sm">
+          <div class="card-body d-flex align-items-center gap-3">
+            <div class="rounded-circle bg-primary bg-opacity-25 p-3">
+              <i class="bi bi-collection fs-3 text-primary"></i>
+            </div>
+            <div>
+              <div class="fs-2 fw-bold" id="adm-total">—</div>
+              <div class="text-muted small">Total Transactions</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="card border-warning border-2 h-100 shadow-sm">
+          <div class="card-body d-flex align-items-center gap-3">
+            <div class="rounded-circle bg-warning bg-opacity-25 p-3">
+              <i class="bi bi-box-arrow-in-right fs-3 text-warning"></i>
+            </div>
+            <div>
+              <div class="fs-2 fw-bold" id="adm-borrowed">—</div>
+              <div class="text-muted small">Currently Borrowed</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="card border-danger border-2 h-100 shadow-sm">
+          <div class="card-body d-flex align-items-center gap-3">
+            <div class="rounded-circle bg-danger bg-opacity-25 p-3">
+              <i class="bi bi-exclamation-triangle fs-3 text-danger"></i>
+            </div>
+            <div>
+              <div class="fs-2 fw-bold" id="adm-overdue">—</div>
+              <div class="text-muted small">Overdue</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="card border-success border-2 h-100 shadow-sm">
+          <div class="card-body d-flex align-items-center gap-3">
+            <div class="rounded-circle bg-success bg-opacity-25 p-3">
+              <i class="bi bi-check-circle fs-3 text-success"></i>
+            </div>
+            <div>
+              <div class="fs-2 fw-bold" id="adm-returned">—</div>
+              <div class="text-muted small">Returned</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── OVERDUE ALERT BANNER ──────────────────────────── -->
+    <div id="overdue-banner" class="alert alert-danger d-flex align-items-start gap-3 mb-4 shadow-sm">
+      <i class="bi bi-exclamation-triangle-fill fs-4 flex-shrink-0 mt-1"></i>
+      <div>
+        <strong>Overdue Resources Detected!</strong>
+        <div id="overdue-list" class="mt-1 small"></div>
+      </div>
+    </div>
+
+    <!-- ── SEARCH & FILTER ───────────────────────────────── -->
+    <div class="card border-secondary shadow-sm mb-4">
+      <div class="card-body">
+        <div class="row g-3 align-items-end">
+          <div class="col-md-5">
+            <label class="form-label small text-muted">Search by student, resource, or ID</label>
+            <div class="input-group">
+              <span class="input-group-text bg-body-secondary border-secondary">
+                <i class="bi bi-search text-muted"></i>
+              </span>
+              <input type="text" id="adm-search" class="form-control bg-body-secondary border-secondary"
+                     placeholder="e.g. Rahul, Calculator, TXN001..." oninput="adminFilter()" />
+            </div>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label small text-muted">Status</label>
+            <select id="adm-status" class="form-select bg-body-secondary border-secondary" onchange="adminFilter()">
+              <option value="all">All Statuses</option>
+              <option value="borrowed">Borrowed</option>
+              <option value="returned">Returned</option>
+              <option value="overdue">Overdue</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <label class="form-label small text-muted">Sort By</label>
+            <select id="adm-sort" class="form-select bg-body-secondary border-secondary" onchange="adminFilter()">
+              <option value="due">Due Date ↑</option>
+              <option value="borrow">Borrow Date ↓</option>
+              <option value="status">Status</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <button class="btn btn-outline-secondary w-100"
+              onclick="document.getElementById('adm-search').value='';
+                       document.getElementById('adm-status').value='all';
+                       document.getElementById('adm-sort').value='due';
+                       adminFilter();">
+              <i class="bi bi-x-circle me-1"></i>Reset
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TABS ──────────────────────────────────────────── -->
+    <ul class="nav nav-tabs border-secondary mb-3">
+      <li class="nav-item">
+        <button class="nav-link active text-warning" data-bs-toggle="tab" data-bs-target="#tab-all-admin">
+          <i class="bi bi-collection me-1"></i>All Records
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-active-admin"
+          onclick="document.getElementById('adm-status').value='borrowed'; adminFilter();">
+          <i class="bi bi-box-arrow-in-right me-1"></i>Currently Borrowed
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link text-danger" data-bs-toggle="tab" data-bs-target="#tab-overdue-admin"
+          onclick="document.getElementById('adm-status').value='overdue'; adminFilter();">
+          <i class="bi bi-exclamation-triangle me-1"></i>Overdue
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link text-success" data-bs-toggle="tab" data-bs-target="#tab-returned-admin"
+          onclick="document.getElementById('adm-status').value='returned'; adminFilter();">
+          <i class="bi bi-check-circle me-1"></i>Returned
+        </button>
+      </li>
+    </ul>
+
+    <!-- ── MAIN TABLE ─────────────────────────────────────── -->
+    <div class="card border-secondary shadow-sm">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-dark">
+              <tr>
+                <th>Txn ID</th>
+                <th>Student</th>
+                <th>Roll No.</th>
+                <th>Resource</th>
+                <th>Type</th>
+                <th>Borrow Date</th>
+                <th>Due Date</th>
+                <th>Days Left / Overdue</th>
+                <th>Return Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="adm-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card-footer border-secondary text-muted small d-flex justify-content-between">
+        <span>Showing <strong id="adm-count">—</strong> record(s)</span>
+        <span>
+          <span class="me-3"><span class="badge bg-danger me-1">■</span>Overdue</span>
+          <span class="me-3"><span class="badge bg-warning text-dark me-1">■</span>Due in ≤ 2 days</span>
+          <span><span class="badge bg-success me-1">■</span>Returned</span>
+        </span>
+      </div>
+    </div>
+
+    <!-- ── PENDING RETURNS CARDS ──────────────────────────── -->
+    <div class="mt-4">
+      <h5 class="fw-bold mb-3"><i class="bi bi-hourglass-split me-2 text-warning"></i>Pending & Overdue — Quick View</h5>
+      <div class="row g-3" id="adm-pending-cards"></div>
+    </div>
+
+  </div><!-- /container -->
+
+  <!-- ── FOOTER ──────────────────────────────────────────── -->
+  <footer class="border-top border-secondary py-3 mt-4 bg-body-tertiary">
+    <div class="container text-center">
+      <small class="text-muted">© 2025 CampusShare · Admin Panel · Built with Bootstrap 5</small>
+    </div>
+  </footer>
+
+  <div id="toast-container" class="position-fixed bottom-0 end-0 p-3" style="z-index:1100"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+  <script>
+    // ── Admin page init ──────────────────────────────────────
+    document.addEventListener("DOMContentLoaded", () => {
+      // Auth guard
+      const role = sessionStorage.getItem("cs_role");
+      if (role !== "admin") { window.location.href = "/login"; return; }
+
+      buildAdminPage();
+    });
+
+    function daysRemaining(dueDateStr) {
+      const today = new Date(); today.setHours(0,0,0,0);
+      const due   = new Date(dueDateStr); due.setHours(0,0,0,0);
+      return Math.floor((due - today) / 86400000);
+    }
+
+    function dueBadge(t) {
+      if (t.status === "returned") return `<span class="badge bg-success">Returned</span>`;
+      const days = daysRemaining(t.dueDate);
+      if (days < 0)  return `<span class="badge bg-danger">${Math.abs(days)}d overdue</span>`;
+      if (days <= 2) return `<span class="badge bg-warning text-dark">Due in ${days}d</span>`;
+      return `<span class="badge bg-secondary">${days}d left</span>`;
+    }
+
+    function statusBadge(s) {
+      const map = { borrowed:"bg-primary", returned:"bg-success", overdue:"bg-danger" };
+      return `<span class="badge ${map[s]||"bg-secondary"} text-capitalize">${s}</span>`;
+    }
+
+    function formatDate(str) {
+      if (!str) return "—";
+      return new Date(str).toLocaleDateString("en-IN", { day:"2-digit", month:"short", year:"numeric" });
+    }
+
+    let adminFiltered = [];
+
+    function buildAdminPage() {
+      // Stats
+      document.getElementById("adm-total").textContent    = transactions.length;
+      document.getElementById("adm-borrowed").textContent  = transactions.filter(t=>t.status==="borrowed").length;
+      document.getElementById("adm-overdue").textContent   = transactions.filter(t=>t.status==="overdue").length;
+      document.getElementById("adm-returned").textContent  = transactions.filter(t=>t.status==="returned").length;
+
+      // Overdue banner
+      const overdueItems = transactions.filter(t => t.status === "overdue");
+      const banner = document.getElementById("overdue-banner");
+      if (!overdueItems.length) { banner.classList.add("d-none"); }
+      else {
+        document.getElementById("overdue-list").innerHTML =
+          overdueItems.map(t =>
+            `<span class="me-3">• <strong>${t.resource}</strong> (${t.id}) — ${t.student} — Due: ${formatDate(t.dueDate)}</span>`
+          ).join("<br>");
+      }
+
+      // Pending cards
+      const pending = transactions.filter(t => t.status !== "returned");
+      const cardCont = document.getElementById("adm-pending-cards");
+      pending.forEach(t => {
+        const days = daysRemaining(t.dueDate);
+        const isOverdue = days < 0;
+        const isDueSoon = !isOverdue && days <= 2;
+        const borderClass = isOverdue ? "border-danger" : isDueSoon ? "border-warning" : "border-secondary";
+        const bgClass     = isOverdue ? "bg-danger bg-opacity-10" : isDueSoon ? "bg-warning bg-opacity-10" : "";
+        cardCont.innerHTML += `
+          <div class="col-md-4 col-lg-3">
+            <div class="card ${borderClass} ${bgClass} p-3 shadow-sm h-100">
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <code class="small">${t.id}</code>
+                ${statusBadge(t.status)}
+              </div>
+              <div class="fw-semibold mb-1">${t.resource}</div>
+              <small class="text-muted d-block mb-1"><i class="bi bi-person me-1"></i>${t.student} · ${t.rollNo}</small>
+              <small class="text-muted d-block"><i class="bi bi-calendar me-1"></i>Due: <strong>${formatDate(t.dueDate)}</strong></small>
+              <div class="mt-2">${dueBadge(t)}</div>
+            </div>
+          </div>`;
+      });
+
+      adminFilter();
+    }
+
+    function adminFilter() {
+      const q      = (document.getElementById("adm-search")?.value || "").toLowerCase();
+      const status = document.getElementById("adm-status")?.value || "all";
+      const sort   = document.getElementById("adm-sort")?.value   || "due";
+
+      let data = transactions.filter(t => {
+        const matchQ = !q ||
+          t.id.toLowerCase().includes(q) ||
+          t.student.toLowerCase().includes(q) ||
+          t.resource.toLowerCase().includes(q) ||
+          t.rollNo.toLowerCase().includes(q);
+        const matchS = status === "all" || t.status === status;
+        return matchQ && matchS;
+      });
+
+      // Sort
+      if (sort === "due") data.sort((a,b) => new Date(a.dueDate) - new Date(b.dueDate));
+      else if (sort === "borrow") data.sort((a,b) => new Date(b.borrowDate) - new Date(a.borrowDate));
+      else data.sort((a,b) => a.status.localeCompare(b.status));
+
+      adminFiltered = data;
+      renderAdminTable(data);
+      document.getElementById("adm-count").textContent = data.length;
+    }
+
+    function renderAdminTable(data) {
+      const tbody = document.getElementById("adm-tbody");
+      tbody.innerHTML = "";
+      if (!data.length) {
+        tbody.innerHTML = `<tr><td colspan="10" class="text-center text-muted py-4">No records found.</td></tr>`;
+        return;
+      }
+      data.forEach(t => {
+        const days = t.status !== "returned" ? daysRemaining(t.dueDate) : null;
+        const rowClass = t.status === "overdue" ? "overdue-row" : (days !== null && days <= 2 && t.status !== "returned") ? "due-soon-row" : "";
+        tbody.innerHTML += `
+          <tr class="${rowClass}">
+            <td><code>${t.id}</code></td>
+            <td class="fw-semibold">${t.student}</td>
+            <td><small class="text-muted">${t.rollNo}</small></td>
+            <td>${t.resource}</td>
+            <td><span class="badge bg-info text-dark">${t.type}</span></td>
+            <td>${formatDate(t.borrowDate)}</td>
+            <td class="${t.status==='overdue'?'text-danger fw-semibold':''}">${formatDate(t.dueDate)}</td>
+            <td>${dueBadge(t)}</td>
+            <td>${formatDate(t.returnDate)}</td>
+            <td>${statusBadge(t.status)}</td>
+          </tr>`;
+      });
+    }
+  </script>
+</body>
+</html>
